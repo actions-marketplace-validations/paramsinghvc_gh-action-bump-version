@@ -13,6 +13,9 @@ if (process.env.PACKAGEJSON_DIR) {
 const workspace = process.env.GITHUB_WORKSPACE;
 
 (async () => {
+	
+	/* Gatherting inputs */
+
   const pkg = getPackageJson();
   const event = process.env.GITHUB_EVENT_PATH ? require(process.env.GITHUB_EVENT_PATH) : {};
 
@@ -22,6 +25,8 @@ const workspace = process.env.GITHUB_WORKSPACE;
 
   const tagPrefix = process.env['INPUT_TAG-PREFIX'] || '';
   console.log('tagPrefix:', tagPrefix);
+  const tagSuffix = process.env['INPUT_TAG-SUFFIX'] || '';
+  console.log('tagSuffix:', tagSuffix);
   const messages = event.commits ? event.commits.map((commit) => commit.message + '\n' + commit.body) : [];
 
   const commitMessage = process.env['INPUT_COMMIT-MESSAGE'] || 'ci: version bump to {{version}}';
@@ -29,6 +34,9 @@ const workspace = process.env.GITHUB_WORKSPACE;
 
   const bumpPolicy = process.env['INPUT_BUMP-POLICY'] || 'all';
   const commitMessageRegex = new RegExp(commitMessage.replace(/{{version}}/g, `${tagPrefix}\\d+\\.\\d+\\.\\d+`), 'ig');
+
+	
+	/* Regex to find if the bump commit already exist in the given commits */
 
   let isVersionBump = false;
 
@@ -130,6 +138,11 @@ const workspace = process.env.GITHUB_WORKSPACE;
     exitSuccess('User requested to skip pushing new tag and package.json. Finished.');
     return;
   }
+
+	/* If tag-suffix exists, append it to the tag name */
+	if(version !== 'prerelease' && tagSuffix) {
+		version = `${version}-${tagSuffix}`;
+	}
 
   // GIT logic
   try {
