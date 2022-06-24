@@ -1,11 +1,11 @@
-name: Automated Version Bump
-description: Automated version bump for npm packages.
+name: Conventional Commit - Auto Version Bump
+description: Automated version bump based on Conventional Commit specification and support for adding version suffix
 runs:
   using: node12
   main: index.js
 branding:
-  icon: chevron-up
-  color: blue
+  icon: bold
+  color: yellow
 inputs:
   tag-prefix:
     description: "Prefix that is used for the git tag"
