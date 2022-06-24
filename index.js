@@ -140,8 +140,8 @@ const workspace = process.env.GITHUB_WORKSPACE;
   }
 
 	/* If tag-suffix exists, append it to the tag name */
-	if(version !== 'prerelease' && tagSuffix) {
-		version = `${version}-${tagSuffix}`;
+	if(tagSuffix) {
+		version = `prerelease --preid=${tagSuffix}`;
 	}
 
   // GIT logic
